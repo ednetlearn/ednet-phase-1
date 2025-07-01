@@ -9,6 +9,7 @@ const WorksheetGenerator = () => {
   });
   const [statusMessage, setStatusMessage] = useState('');
   const [statusType, setStatusType] = useState(''); // 'success' or 'error'
+  const [generatedWorksheet, setGeneratedWorksheet] = useState(null); // Holds generated worksheet
 
   // Handle input changes
   const handleInputChange = (e) => {
@@ -30,22 +31,75 @@ const WorksheetGenerator = () => {
     return true; // Validation successful
   };
 
+  // Generate Sample Questions (mock data)
+  const generateWorksheet = () => {
+    // Sample questions based on subject and topic
+    const sampleQuestions = {
+      Math: {
+        Algebra: [
+          'Solve for x: 2x + 5 = 15',
+          'Simplify: 3x - 4x + 7',
+          'What is the value of x in the equation x + 9 = 16?',
+        ],
+        Geometry: [
+          'Find the area of a circle with radius 5cm.',
+          'What is the Pythagorean theorem?',
+          'Solve for the missing angle in a triangle.',
+        ],
+      },
+      Science: {
+        Physics: [
+          'What is Newton\'s First Law of Motion?',
+          'Explain the concept of kinetic energy.',
+          'What is the formula for speed?',
+        ],
+        Chemistry: [
+          'What is the chemical formula for water?',
+          'What is an acid-base reaction?',
+          'Define the pH scale.',
+        ],
+      },
+      English: {
+        Grammar: [
+          'What is a verb?',
+          'Give an example of an irregular verb.',
+          'Fill in the blank: "I ____ to the store."',
+        ],
+        Literature: [
+          'Who wrote "Romeo and Juliet"?',
+          'What is the theme of "The Great Gatsby"?',
+          'Explain the plot of "To Kill a Mockingbird".',
+        ],
+      },
+    };
+
+    const { subject, topic } = formData;
+    const questions = sampleQuestions[subject]?.[topic];
+
+    if (questions) {
+      setGeneratedWorksheet(questions);
+      setStatusMessage('Worksheet generated successfully!');
+      setStatusType('success');
+    } else {
+      setStatusMessage('Unable to generate worksheet. Please check the subject and topic.');
+      setStatusType('error');
+    }
+  };
+
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
     // Validate form
     if (validateForm()) {
-      setStatusMessage('Worksheet generated successfully!');
-      setStatusType('success');
-      // You can perform any additional logic here (e.g., API calls, generating worksheets)
+      generateWorksheet(); // Generate worksheet if valid
     }
   };
 
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto', fontFamily: 'Arial, sans-serif' }}>
       <h2>Worksheet Generator</h2>
-      
+
       {/* Display Status Messages */}
       {statusMessage && (
         <div
@@ -134,6 +188,20 @@ const WorksheetGenerator = () => {
           Generate Worksheet
         </button>
       </form>
+
+      {/* Display generated worksheet questions */}
+      {generatedWorksheet && (
+        <div style={{ marginTop: '30px' }}>
+          <h3>Generated Worksheet:</h3>
+          <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
+            {generatedWorksheet.map((question, index) => (
+              <li key={index} style={{ marginBottom: '10px' }}>
+                <p>{index + 1}. {question}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
