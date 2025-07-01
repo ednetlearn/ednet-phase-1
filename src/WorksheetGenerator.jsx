@@ -46,36 +46,43 @@ const boardTopics = {
 
 const grades = ['Grade1', 'Grade2', 'Grade3', 'Grade4', 'Grade5', 'Grade6', 'Grade7', 'Grade8', 'Grade9', 'Grade10'];
 
+const activityOptions = [
+  "Logical Reasoning",
+  "Chess Puzzles",
+  "Word Puzzles",
+  "Number Games",
+  "Brain Teasers",
+  "Mazes",
+  "Colour the Picture",
+  "Solve the Riddle",
+  "Block Coding Puzzles"
+];
+
 export default function WorksheetGenerator() {
   const [selectedBoard, setSelectedBoard] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('');
   const [selectedGrade, setSelectedGrade] = useState('');
   const [topics, setTopics] = useState([]);
-
-  const [selectedTopic, setSelectedTopic] = useState('');
   const [customTopic, setCustomTopic] = useState('');
+  const [selectedActivity, setSelectedActivity] = useState('');
+  const [numQuestions, setNumQuestions] = useState(5);
+  const [timeLimit, setTimeLimit] = useState(10);
+  const [activityPreview, setActivityPreview] = useState('');
 
-  // Update topics when selection changes
   useEffect(() => {
     if (!selectedBoard || !selectedSubject || !selectedGrade) {
       setTopics([]);
-      setSelectedTopic('');
-      setCustomTopic('');
       return;
     }
     const board = boardTopics[selectedBoard];
     if (!board) {
       setTopics([]);
-      setSelectedTopic('');
-      setCustomTopic('');
       return;
     }
 
     const subjectData = board[selectedSubject];
     if (!subjectData) {
       setTopics([]);
-      setSelectedTopic('');
-      setCustomTopic('');
       return;
     }
 
@@ -86,16 +93,22 @@ export default function WorksheetGenerator() {
     } else {
       setTopics([]);
     }
-    setSelectedTopic('');
-    setCustomTopic('');
   }, [selectedBoard, selectedSubject, selectedGrade]);
+
+  useEffect(() => {
+    if (!selectedActivity) {
+      setActivityPreview('');
+      return;
+    }
+    const preview = getSamplePreview(selectedActivity);
+    setActivityPreview(preview);
+  }, [selectedActivity]);
 
   const handleBoardChange = (e) => {
     setSelectedBoard(e.target.value);
     setSelectedSubject('');
     setSelectedGrade('');
     setTopics([]);
-    setSelectedTopic('');
     setCustomTopic('');
   };
 
@@ -103,34 +116,56 @@ export default function WorksheetGenerator() {
     setSelectedSubject(e.target.value);
     setSelectedGrade('');
     setTopics([]);
-    setSelectedTopic('');
     setCustomTopic('');
   };
 
   const handleGradeChange = (e) => {
     setSelectedGrade(e.target.value);
-    setSelectedTopic('');
-    setCustomTopic('');
-  };
-
-  const handleTopicChange = (e) => {
-    setSelectedTopic(e.target.value);
     setCustomTopic('');
   };
 
   const handleCustomTopicChange = (e) => {
     setCustomTopic(e.target.value);
-    setSelectedTopic('');
   };
 
-  // Get subjects for selected board
+  const handleActivityChange = (e) => {
+    setSelectedActivity(e.target.value);
+  };
+
+  const getSamplePreview = (activity) => {
+    switch (activity) {
+      case "Logical Reasoning":
+        return "Sample: If all cats are animals and some animals are dogs, are all cats dogs?";
+      case "Chess Puzzles":
+        return "Sample: White to move and checkmate in 2 moves.";
+      case "Word Puzzles":
+        return "Sample: Find the hidden word: _A_P_E";
+      case "Number Games":
+        return "Sample: What comes next in the sequence: 2, 4, 8, 16, ?";
+      case "Brain Teasers":
+        return "Sample: I speak without a mouth and hear without ears. What am I?";
+      case "Mazes":
+        return "Sample: Maze preview here (to be implemented)";
+      case "Colour the Picture":
+        return "Sample: Colour the butterfly image with given colours.";
+      case "Solve the Riddle":
+        return "Sample: What has keys but can't open locks?";
+      case "Block Coding Puzzles":
+        return "Sample: Arrange blocks to make the character move forward.";
+      default:
+        return "";
+    }
+  };
+
+  const handleGenerate = () => {
+    alert(`Generating ${numQuestions} questions for ${selectedActivity}${customTopic ? ` on topic "${customTopic}"` : ''} with a time limit of ${timeLimit} minutes.`);
+    // TODO: integrate with generation API or logic
+  };
+
   const subjects = selectedBoard ? Object.keys(boardTopics[selectedBoard]) : [];
 
-  // Determine which topic to use
-  const topicToUse = customTopic.trim() || selectedTopic;
-
   return (
-    <div style={{ padding: 20 }}>
+    <div style={{ padding: 20, maxWidth: 700 }}>
       <h2>Worksheet Generator</h2>
 
       <div>
@@ -165,40 +200,80 @@ export default function WorksheetGenerator() {
         </label>
       </div>
 
-      {topics.length > 0 && (
-        <>
-          <div style={{ marginTop: 20 }}>
-            <label>
-              Select Topic:
-              <select value={selectedTopic} onChange={handleTopicChange}>
-                <option value="">--Select Topic--</option>
-                {topics.map((topic, idx) => (
-                  <option key={idx} value={topic}>{topic}</option>
-                ))}
-              </select>
-            </label>
+      <div style={{ marginTop: 20 }}>
+        <label>
+          Or Enter Custom Topic:
+          <input
+            type="text"
+            value={customTopic}
+            onChange={handleCustomTopicChange}
+            placeholder="Type a custom topic..."
+            style={{ marginLeft: 10, width: 300 }}
+          />
+        </label>
+      </div>
 
-            <label style={{ marginLeft: 20 }}>
-              Or enter your own topic:
-              <input
-                type="text"
-                value={customTopic}
-                placeholder="Type your topic here"
-                onChange={handleCustomTopicChange}
-                style={{ marginLeft: 10 }}
-              />
-            </label>
-          </div>
+      <div style={{ marginTop: 20 }}>
+        <h3>Topics:</h3>
+        {topics.length > 0 ? (
+          <ul>
+            {topics.map((topic, idx) => (
+              <li key={idx}>{topic}</li>
+            ))}
+          </ul>
+        ) : (
+          <p>No topics available for selected options.</p>
+        )}
+      </div>
 
-          <div style={{ marginTop: 20 }}>
-            <strong>Using Topic:</strong> {topicToUse || <em>Please select or enter a topic above.</em>}
-          </div>
-        </>
-      )}
+      <hr style={{ marginTop: 40, marginBottom: 40 }} />
 
-      {!topics.length && selectedBoard && selectedSubject && selectedGrade && (
-        <p style={{ marginTop: 20 }}>No topics available for the selected board, subject, and grade.</p>
-      )}
+      <h2>Activity Generator</h2>
+
+      <label>
+        Select Activity:
+        <select value={selectedActivity} onChange={handleActivityChange}>
+          <option value="">--Select Activity--</option>
+          {activityOptions.map((act) => (
+            <option key={act} value={act}>{act}</option>
+          ))}
+        </select>
+      </label>
+
+      <div style={{ marginTop: 10 }}>
+        <label>
+          Number of Questions:
+          <input
+            type="number"
+            min="1"
+            max="50"
+            value={numQuestions}
+            onChange={(e) => setNumQuestions(e.target.value)}
+          />
+        </label>
+      </div>
+
+      <div style={{ marginTop: 10 }}>
+        <label>
+          Time Limit (minutes):
+          <input
+            type="number"
+            min="1"
+            max="180"
+            value={timeLimit}
+            onChange={(e) => setTimeLimit(e.target.value)}
+          />
+        </label>
+      </div>
+
+      <div style={{ marginTop: 20 }}>
+        <h3>Preview:</h3>
+        <p>{activityPreview || "Select an activity to see a sample preview."}</p>
+      </div>
+
+      <button onClick={handleGenerate} disabled={!selectedActivity}>
+        Generate
+      </button>
     </div>
   );
 }
