@@ -181,4 +181,106 @@ const WorksheetGenerator = () => {
             <option value="">Select Grade</option>
             <option value="primary">Grade 1</option>
             <option value="middle">Grade 2</option>
-            <option value="high">
+            <option value="high">Grade 3</option>
+            {/* Add more grades if needed */}
+          </select>
+        </div>
+
+        <div style={{ marginBottom: '15px' }}>
+          <label htmlFor="board" style={{ display: 'block' }}>Board:</label>
+          <select
+            id="board"
+            name="board"
+            value={formData.board}
+            onChange={handleBoardChange}
+            style={{ padding: '8px', width: '100%' }}
+          >
+            <option value="">Select Board</option>
+            <option value="CBSE">CBSE</option>
+            <option value="ICSE">ICSE</option>
+            <option value="NCERT">NCERT</option>
+            <option value="Cambridge">Cambridge</option>
+          </select>
+        </div>
+
+        <div style={{ marginBottom: '15px' }}>
+          <label htmlFor="subject" style={{ display: 'block' }}>Subject:</label>
+          <select
+            id="subject"
+            name="subject"
+            value={formData.subject}
+            onChange={handleSubjectChange}
+            style={{ padding: '8px', width: '100%' }}
+          >
+            <option value="">Select Subject</option>
+            <option value="Math">Math</option>
+            <option value="Science">Science</option>
+            <option value="English">English</option>
+            <option value="Hindi">Hindi</option> {/* Added Hindi */}
+            <option value="EVS">EVS</option>
+          </select>
+        </div>
+
+        <div style={{ marginBottom: '15px' }}>
+          <label htmlFor="topic" style={{ display: 'block' }}>Topic:</label>
+          <select
+            id="topic"
+            name="topic"
+            value={formData.topic}
+            onChange={handleInputChange}
+            style={{ padding: '8px', width: '100%' }}
+          >
+            <option value="">Select Topic</option>
+            {boardTopics[formData.board] && boardTopics[formData.board][formData.subject]?.map((topic, index) => (
+              <option key={index} value={topic}>{topic}</option>
+            ))}
+          </select>
+        </div>
+
+        <div style={{ marginBottom: '15px' }}>
+          <label htmlFor="date" style={{ display: 'block' }}>Date:</label>
+          <input
+            type="date"
+            id="date"
+            name="date"
+            value={formData.date}
+            onChange={handleInputChange}
+            style={{ padding: '8px', width: '100%' }}
+          />
+        </div>
+
+        <button
+          type="submit"
+          style={{ backgroundColor: '#0b76ef', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+        >
+          Generate Worksheet
+        </button>
+      </form>
+
+      {/* Display Generated Worksheet in Table */}
+      {generatedWorksheet && (
+        <div style={{ marginTop: '30px' }}>
+          <h3>Generated Worksheet:</h3>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                <th>Question No.</th>
+                <th>Question</th>
+              </tr>
+            </thead>
+            <tbody>
+              {generatedWorksheet.map((question, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{question}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default WorksheetGenerator;
