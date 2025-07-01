@@ -23,7 +23,7 @@ const boardTopics = {
     Hindi: ['Vocabulary', 'Basic Grammar', 'Sentences'],
     EVS: ['Plants', 'Animals', 'Water', 'Transport', 'Our Helpers'],
   },
-  Cambridge: {
+  International: {
     Math: ['Calculus', 'Algebra', 'Statistics'],
     Science: ['Physics', 'Chemistry', 'Biology'],
     English: ['Literature', 'Writing Skills'],
