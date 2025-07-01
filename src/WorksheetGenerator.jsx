@@ -1,121 +1,143 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const boardTopics = {
-  // ... (paste your full boardTopics object here)
+  CBSE: {
+    Math: ['Multiplication', 'Division', 'Fractions', 'Geometry', 'Decimals'],
+    Science: ['Physics', 'Chemistry', 'Biology'],
+    English: ['Tenses', 'Comprehension', 'Adjectives', 'Nouns'],
+    Hindi: ['Vocabulary', 'Sentences', 'Simple Grammar'],
+    EVS: {
+      Grade1: ['Parts of a plant', 'Types of animals', 'Life cycle of a butterfly', 'Basic understanding of body parts', 'Healthy food', 'Uses of water', 'Importance of air'],
+      Grade2: ['Habitat and adaptation', 'Sense organs', 'Living and Non-living things', 'Properties of materials', 'Weather and seasons'],
+      Grade3: ['Classification of animals', 'Structure of bones and muscles', 'States of matter', 'Climate and weather', 'Forces and motion'],
+      // Add more grades as needed
+    },
+    Geography: {
+      Grade1: ['Our Environment', 'My Family, My Neighborhood', 'Basic Landforms'],
+      Grade2: ['Understanding Locations', 'Types of Environment', 'Water Bodies'],
+      Grade3: ['Local Geography', 'Landforms and Water Bodies', 'Introduction to Maps'],
+      // Add more grades as needed
+    },
+    ICT: ['Basic Computer Literacy', 'MS Office', 'Internet Safety', 'Scratch Programming', 'Python Programming'],
+    SocialScience: ['History', 'Geography', 'Political Science (Civics)', 'Economics'],
+  },
+  ICSE: {
+    Math: ['Multiplication', 'Division', 'Fractions', 'Measurement'],
+    Science: ['Physics', 'Chemistry', 'Biology'],
+    English: ['Vocabulary', 'Tenses', 'Comprehension'],
+    Hindi: ['Simple Sentences', 'Grammar', 'Comprehension'],
+    EVS: {
+      Grade1: ['Parts of a plant', 'Life cycle of a butterfly', 'Basic understanding of body parts', 'Healthy food', 'Uses of water'],
+      Grade2: ['Habitat and adaptation', 'Living and Non-living things', 'Properties of materials', 'Weather and seasons'],
+      Grade3: ['Classification of animals', 'Structure of bones and muscles', 'States of matter', 'Climate and weather', 'Forces and motion'],
+      // Add more grades as needed
+    },
+    Geography: {
+      Grade1: ['Our Environment', 'My Family, My Neighborhood', 'Basic Landforms'],
+      Grade2: ['Understanding Locations', 'Types of Environment', 'Water Bodies'],
+      Grade3: ['Local Geography', 'Landforms and Water Bodies', 'Introduction to Maps'],
+      // Add more grades as needed
+    },
+    ICT: ['Basic Computer Literacy', 'MS Office', 'Internet Safety', 'Scratch Programming', 'Python Programming'],
+    SocialScience: ['Indian History', 'World History', 'Geography', 'Civics'],
+  },
+  // Add other boards similarly ...
 };
 
-const WorksheetGenerator = () => {
-  const [board, setBoard] = useState('');
-  const [subject, setSubject] = useState('');
-  const [grade, setGrade] = useState('');
+const grades = ['Grade1', 'Grade2', 'Grade3', 'Grade4', 'Grade5', 'Grade6', 'Grade7', 'Grade8', 'Grade9', 'Grade10'];
+
+export default function WorksheetGenerator() {
+  const [selectedBoard, setSelectedBoard] = useState('');
+  const [selectedSubject, setSelectedSubject] = useState('');
+  const [selectedGrade, setSelectedGrade] = useState('');
   const [topics, setTopics] = useState([]);
 
-  // Handle board change
-  const handleBoardChange = (e) => {
-    const selectedBoard = e.target.value;
-    setBoard(selectedBoard);
-    setSubject('');
-    setGrade('');
-    setTopics([]);
-  };
+  // Update topics when selection changes
+  useEffect(() => {
+    if (!selectedBoard || !selectedSubject || !selectedGrade) {
+      setTopics([]);
+      return;
+    }
+    const board = boardTopics[selectedBoard];
+    if (!board) {
+      setTopics([]);
+      return;
+    }
 
-  // Handle subject change
-  const handleSubjectChange = (e) => {
-    const selectedSubject = e.target.value;
-    setSubject(selectedSubject);
-    setGrade('');
-    setTopics([]);
-  };
+    const subjectData = board[selectedSubject];
+    if (!subjectData) {
+      setTopics([]);
+      return;
+    }
 
-  // Handle grade change
-  const handleGradeChange = (e) => {
-    const selectedGrade = e.target.value;
-    setGrade(selectedGrade);
-
-    // Fetch topics for the selected board, subject, and grade
-    if (
-      board &&
-      subject &&
-      grade !== ''
-    ) {
-      // Check if subject contains grade level subtopics (like EVS, Geography)
-      const boardData = boardTopics[board];
-      if (!boardData) return setTopics([]);
-
-      const subjectData = boardData[subject];
-      if (!subjectData) return setTopics([]);
-
-      if (typeof subjectData === 'object' && subjectData !== null) {
-        // Subject has grade level topics (like EVS, Geography)
-        setTopics(subjectData[selectedGrade] || []);
-      } else {
-        // Subject has direct topic array (like Math, English)
-        setTopics(subjectData || []);
-      }
+    if (Array.isArray(subjectData)) {
+      // Subject with simple array of topics
+      setTopics(subjectData);
+    } else if (typeof subjectData === 'object') {
+      // Subject with grade-wise topics
+      setTopics(subjectData[selectedGrade] || []);
     } else {
       setTopics([]);
     }
+  }, [selectedBoard, selectedSubject, selectedGrade]);
+
+  const handleBoardChange = (e) => {
+    setSelectedBoard(e.target.value);
+    setSelectedSubject('');
+    setSelectedGrade('');
+    setTopics([]);
   };
 
-  // Helper to get grades list from boardTopics object (only for subjects with grade keys)
-  const getGrades = () => {
-    if (board && subject) {
-      const subjectData = boardTopics[board]?.[subject];
-      if (typeof subjectData === 'object' && subjectData !== null) {
-        return Object.keys(subjectData);
-      }
-    }
-    return [];
+  const handleSubjectChange = (e) => {
+    setSelectedSubject(e.target.value);
+    setSelectedGrade('');
+    setTopics([]);
   };
+
+  const handleGradeChange = (e) => {
+    setSelectedGrade(e.target.value);
+  };
+
+  // Get subjects for selected board
+  const subjects = selectedBoard ? Object.keys(boardTopics[selectedBoard]) : [];
 
   return (
-    <div>
+    <div style={{ padding: 20 }}>
       <h2>Worksheet Generator</h2>
 
-      {/* Board Dropdown */}
-      <label>
-        Select Board:
-        <select value={board} onChange={handleBoardChange}>
-          <option value="">--Select Board--</option>
-          {Object.keys(boardTopics).map((b) => (
-            <option key={b} value={b}>{b}</option>
-          ))}
-        </select>
-      </label>
-
-      {/* Subject Dropdown */}
-      <label>
-        Select Subject:
-        <select
-          value={subject}
-          onChange={handleSubjectChange}
-          disabled={!board}
-        >
-          <option value="">--Select Subject--</option>
-          {board &&
-            Object.keys(boardTopics[board]).map((subj) => (
-              <option key={subj} value={subj}>{subj}</option>
-            ))}
-        </select>
-      </label>
-
-      {/* Grade Dropdown */}
-      <label>
-        Select Grade:
-        <select
-          value={grade}
-          onChange={handleGradeChange}
-          disabled={!subject}
-        >
-          <option value="">--Select Grade--</option>
-          {getGrades().map((g) => (
-            <option key={g} value={g}>{g}</option>
-          ))}
-        </select>
-      </label>
-
-      {/* Topics List */}
       <div>
+        <label>
+          Select Board:
+          <select value={selectedBoard} onChange={handleBoardChange}>
+            <option value="">--Select Board--</option>
+            {Object.keys(boardTopics).map((board) => (
+              <option key={board} value={board}>{board}</option>
+            ))}
+          </select>
+        </label>
+
+        <label style={{ marginLeft: 20 }}>
+          Select Subject:
+          <select value={selectedSubject} onChange={handleSubjectChange} disabled={!selectedBoard}>
+            <option value="">--Select Subject--</option>
+            {subjects.map((subject) => (
+              <option key={subject} value={subject}>{subject}</option>
+            ))}
+          </select>
+        </label>
+
+        <label style={{ marginLeft: 20 }}>
+          Select Grade:
+          <select value={selectedGrade} onChange={handleGradeChange} disabled={!selectedSubject}>
+            <option value="">--Select Grade--</option>
+            {grades.map((grade) => (
+              <option key={grade} value={grade}>{grade}</option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      <div style={{ marginTop: 20 }}>
         <h3>Topics:</h3>
         {topics.length > 0 ? (
           <ul>
@@ -129,6 +151,4 @@ const WorksheetGenerator = () => {
       </div>
     </div>
   );
-};
-
-export default WorksheetGenerator;
+}
