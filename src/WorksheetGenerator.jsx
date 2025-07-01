@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 // Static data for topics based on board and subject
 const boardTopics = {
@@ -6,25 +6,25 @@ const boardTopics = {
     Math: ['Algebra', 'Geometry', 'Trigonometry'],
     Science: ['Physics', 'Chemistry', 'Biology'],
     English: ['Grammar', 'Literature'],
-    Hindi: ['Grammar', 'Comprehension', 'Literature'], // Added Hindi
+    Hindi: ['Grammar', 'Comprehension', 'Literature'],
   },
   ICSE: {
     Math: ['Algebra', 'Geometry', 'Calculus'],
     Science: ['Physics', 'Chemistry', 'Environmental Science'],
     English: ['Writing Skills', 'Literature'],
-    Hindi: ['Grammar', 'Comprehension', 'Literature'], // Added Hindi
+    Hindi: ['Grammar', 'Comprehension', 'Literature'],
   },
   NCERT: {
     Math: ['Number Theory', 'Calculus', 'Algebra'],
     Science: ['Physics', 'Chemistry', 'Biology'],
     English: ['Grammar', 'Comprehension'],
-    Hindi: ['Grammar', 'Comprehension', 'Literature'], // Added Hindi
+    Hindi: ['Grammar', 'Comprehension', 'Literature'],
   },
   Cambridge: {
     Math: ['Calculus', 'Algebra', 'Statistics'],
     Science: ['Physics', 'Chemistry', 'Biology'],
     English: ['Literature', 'Writing Skills'],
-    Hindi: ['Grammar', 'Comprehension', 'Literature'], // Added Hindi
+    Hindi: ['Grammar', 'Comprehension', 'Literature'],
   },
 };
 
@@ -106,7 +106,7 @@ const WorksheetGenerator = () => {
       Math: ['Solve for x: 2x + 5 = 15', 'What is 2 + 2?', 'Find the area of a rectangle'],
       Science: ['What is Newton\'s Second Law?', 'What is the chemical formula for water?', 'Describe the process of photosynthesis'],
       English: ['Define a verb.', 'Write a short story using the word "adventure".', 'What is the past tense of "run"?'],
-      Hindi: ['What is a noun?', 'Define a verb in Hindi.', 'Write a short essay on "My Family" in Hindi.'], // Added sample Hindi questions
+      Hindi: ['What is a noun?', 'Define a verb in Hindi.', 'Write a short essay on "My Family" in Hindi.'],
     };
 
     const { subject, topic } = formData;
@@ -242,22 +242,34 @@ const WorksheetGenerator = () => {
           />
         </div>
 
-        <button type="submit" style={{ backgroundColor: '#0b76ef', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+        <button
+          type="submit"
+          style={{ backgroundColor: '#0b76ef', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+        >
           Generate Worksheet
         </button>
       </form>
 
-      {/* Display Generated Worksheet */}
+      {/* Display Generated Worksheet in Table */}
       {generatedWorksheet && (
         <div style={{ marginTop: '30px' }}>
           <h3>Generated Worksheet:</h3>
-          <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
-            {generatedWorksheet.map((question, index) => (
-              <li key={index} style={{ marginBottom: '10px' }}>
-                <p>{index + 1}. {question}</p>
-              </li>
-            ))}
-          </ul>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                <th>Question No.</th>
+                <th>Question</th>
+              </tr>
+            </thead>
+            <tbody>
+              {generatedWorksheet.map((question, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{question}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
