@@ -3,25 +3,25 @@ import React, { useState, useEffect } from 'react';
 // Static data for topics based on board and subject
 const boardTopics = {
   CBSE: {
-    Math: ['Multiplication', 'Division', 'Fractions', 'Time', 'Money'],
+    Math: ['Multiplication', 'Division', 'Geometry', 'Fractions', 'Decimals'],
     Science: ['Physics', 'Chemistry', 'Biology'],
-    English: ['Tenses', 'Vocabulary', 'Comprehension'],
-    Hindi: ['Simple Sentences', 'Vocabulary', 'Grammar'],
-    EVS: ['Animals', 'Plants', 'Water', 'Our Earth'],
+    English: ['Tenses', 'Comprehension', 'Adjectives', 'Nouns'],
+    Hindi: ['Vocabulary', 'Sentences', 'Simple Grammar'],
+    EVS: ['Earth', 'Water', 'Plants', 'Animals', 'Human Body'],
   },
   ICSE: {
-    Math: ['Multiplication', 'Division', 'Fractions', 'Measurement'],
+    Math: ['Addition', 'Subtraction', 'Multiplication', 'Division', 'Geometry'],
     Science: ['Physics', 'Chemistry', 'Biology'],
-    English: ['Vocabulary', 'Tenses', 'Comprehension'],
-    Hindi: ['Simple Sentences', 'Vocabulary', 'Basic Grammar'],
-    EVS: ['Plants', 'Animals', 'Water', 'Food', 'Environment'],
+    English: ['Comprehension', 'Composition', 'Tenses'],
+    Hindi: ['Simple Sentences', 'Grammar', 'Comprehension'],
+    EVS: ['Earth', 'Water', 'Animals', 'Plants', 'Pollution'],
   },
   NCERT: {
-    Math: ['Multiplication', 'Division', 'Fractions', 'Time', 'Money'],
+    Math: ['Multiplication', 'Division', 'Geometry', 'Fractions', 'Decimals'],
     Science: ['Physics', 'Chemistry', 'Biology'],
-    English: ['Tenses', 'Vocabulary', 'Comprehension'],
-    Hindi: ['Simple Sentences', 'Vocabulary', 'Grammar'],
-    EVS: ['Animals', 'Plants', 'Water', 'Our Earth'],
+    English: ['Tenses', 'Comprehension', 'Adjectives', 'Nouns'],
+    Hindi: ['Vocabulary', 'Sentences', 'Simple Grammar'],
+    EVS: ['Earth', 'Water', 'Plants', 'Animals', 'Human Body'],
   },
   International: {
     Math: ['Calculus', 'Algebra', 'Statistics'],
