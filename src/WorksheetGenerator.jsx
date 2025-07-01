@@ -1,95 +1,134 @@
+import React, { useState } from 'react';
+
 const boardTopics = {
-  CBSE: {
-    Math: ['Multiplication', 'Division', 'Fractions', 'Geometry', 'Decimals'],
-    Science: ['Physics', 'Chemistry', 'Biology'],
-    English: ['Tenses', 'Comprehension', 'Adjectives', 'Nouns'],
-    Hindi: ['Vocabulary', 'Sentences', 'Simple Grammar'],
-    EVS: {
-      Grade1: ['Parts of a plant', 'Types of animals', 'Life cycle of a butterfly', 'Basic understanding of body parts', 'Healthy food', 'Uses of water', 'Importance of air'],
-      Grade2: ['Habitat and adaptation', 'Sense organs', 'Living and Non-living things', 'Properties of materials', 'Weather and seasons'],
-      Grade3: ['Classification of animals', 'Structure of bones and muscles', 'States of matter', 'Climate and weather', 'Forces and motion'],
-      Grade4: ['Food chains', 'Ecosystems', 'Circulatory system', 'Respiratory system', 'Changes in materials', 'Temperature and effects of heat'],
-      Grade5: ['Photosynthesis', 'Reproduction in plants', 'States of matter', 'Force and motion', 'Air pressure', 'Environmental conservation'],
-      Grade6: ['Sources of food', 'Classification of living organisms', 'Digestive system', 'Material properties', 'Electricity and magnetism'],
-    },
-    Geography: {
-      Grade1: ['Our Environment', 'My Family, My Neighborhood', 'Basic Landforms'],
-      Grade2: ['Understanding Locations', 'Types of Environment', 'Water Bodies'],
-      Grade3: ['Local Geography', 'Landforms and Water Bodies', 'Introduction to Maps'],
-      Grade4: ['Earth and Its Features', 'Landforms', 'The Earth’s Rotation', 'Basic Climate', 'Natural Resources'],
-      Grade5: ['The World and Continents', 'Climate and Weather', 'Human Geography'],
-      Grade6: ['The Earth in the Solar System', 'Latitude and Longitude', 'Landforms', 'Water Bodies', 'Weather and Climate'],
-      Grade7: ['Earth and Its Features', 'Landforms and Water Bodies', 'Climate', 'India’s Physical Features'],
-      Grade8: ['Major Landforms of the World', 'Climatic Zones of the World', 'India’s Climate', 'Vegetation Zones', 'Water Resources'],
-      Grade9: ['Earth’s Movements', 'Landforms and Their Formation', 'Atmosphere and Weather', 'Climatic Regions of the World', 'Population', 'Human Settlements', 'Natural Resources'],
-      Grade10: ['Geomorphology', 'Climatic Conditions', 'Natural Vegetation', 'Water Resources', 'Population Dynamics', 'Agriculture', 'Transport and Communication', 'Industrial Regions', 'Urbanization'],
-    },
-    ICT: ['Basic Computer Literacy', 'MS Office', 'Internet Safety', 'Scratch Programming', 'Python Programming'],
-    SocialScience: ['History', 'Geography', 'Political Science (Civics)', 'Economics'],
-  },
-  ICSE: {
-    Math: ['Multiplication', 'Division', 'Fractions', 'Measurement'],
-    Science: ['Physics', 'Chemistry', 'Biology'],
-    English: ['Vocabulary', 'Tenses', 'Comprehension'],
-    Hindi: ['Simple Sentences', 'Grammar', 'Comprehension'],
-    EVS: {
-      Grade1: ['Parts of a plant', 'Life cycle of a butterfly', 'Basic understanding of body parts', 'Healthy food', 'Uses of water'],
-      Grade2: ['Habitat and adaptation', 'Living and Non-living things', 'Properties of materials', 'Weather and seasons'],
-      Grade3: ['Classification of animals', 'Structure of bones and muscles', 'States of matter', 'Climate and weather', 'Forces and motion'],
-      Grade4: ['Food chains', 'Ecosystems', 'Circulatory system', 'Changes in materials', 'Temperature and effects of heat'],
-      Grade5: ['Photosynthesis', 'Reproduction in plants', 'States of matter', 'Force and motion', 'Air pressure', 'Pollution'],
-      Grade6: ['Sources of food', 'Classification of plants and animals', 'Digestive system', 'Material properties', 'Electricity and magnetism'],
-    },
-    Geography: {
-      Grade1: ['Our Environment', 'My Family, My Neighborhood', 'Basic Landforms'],
-      Grade2: ['Understanding Locations', 'Types of Environment', 'Water Bodies'],
-      Grade3: ['Local Geography', 'Landforms and Water Bodies', 'Introduction to Maps'],
-      Grade4: ['Earth and Its Features', 'Landforms', 'The Earth’s Rotation', 'Basic Climate', 'Natural Resources'],
-      Grade5: ['The World and Continents', 'Climate and Weather', 'Human Geography'],
-      Grade6: ['The Earth in the Solar System', 'Latitude and Longitude', 'Landforms', 'Water Bodies', 'Weather and Climate'],
-      Grade7: ['Earth and Its Features', 'Landforms and Water Bodies', 'Climate', 'India’s Physical Features'],
-      Grade8: ['Major Landforms of the World', 'Climatic Zones of the World', 'India’s Climate', 'Vegetation Zones', 'Water Resources'],
-      Grade9: ['Earth’s Movements', 'Landforms and Their Formation', 'Atmosphere and Weather', 'Climatic Regions of the World', 'Population', 'Human Settlements', 'Natural Resources'],
-      Grade10: ['Geomorphology', 'Climatic Conditions', 'Natural Vegetation', 'Water Resources', 'Population Dynamics', 'Agriculture', 'Transport and Communication', 'Industrial Regions', 'Urbanization'],
-    },
-    ICT: ['Basic Computer Literacy', 'MS Office', 'Internet Safety', 'Scratch Programming', 'Python Programming'],
-    SocialScience: ['Indian History', 'World History', 'Geography', 'Civics'],
-  },
-  NCERT: {
-    Math: ['Multiplication', 'Division', 'Fractions', 'Time', 'Money'],
-    Science: ['Physics', 'Chemistry', 'Biology'],
-    English: ['Tenses', 'Comprehension', 'Adjectives', 'Nouns'],
-    Hindi: ['Vocabulary', 'Sentences', 'Simple Grammar'],
-    EVS: {
-      Grade1: ['Parts of a plant', 'Types of animals', 'Life cycle of a butterfly', 'Basic understanding of body parts', 'Healthy food', 'Uses of water'],
-      Grade2: ['Habitat and adaptation', 'Living and Non-living things', 'Properties of materials', 'Weather and seasons'],
-      Grade3: ['Classification of animals', 'Structure of bones and muscles', 'States of matter', 'Climate and weather', 'Forces and motion'],
-      Grade4: ['Food chains', 'Ecosystems', 'Circulatory system', 'Respiratory system', 'Changes in materials', 'Temperature and effects of heat'],
-      Grade5: ['Photosynthesis', 'Reproduction in plants', 'States of matter', 'Force and motion', 'Air pressure', 'Environmental conservation'],
-      Grade6: ['Sources of food', 'Classification of living organisms', 'Digestive system', 'Material properties', 'Electricity and magnetism'],
-    },
-    Geography: {
-      Grade1: ['Our Environment', 'My Family, My Neighborhood', 'Basic Landforms'],
-      Grade2: ['Understanding Locations', 'Types of Environment', 'Water Bodies'],
-      Grade3: ['Local Geography', 'Landforms and Water Bodies', 'Introduction to Maps'],
-      Grade4: ['Earth and Its Features', 'Landforms', 'The Earth’s Rotation', 'Basic Climate', 'Natural Resources'],
-      Grade5: ['The World and Continents', 'Climate and Weather', 'Human Geography'],
-      Grade6: ['The Earth in the Solar System', 'Latitude and Longitude', 'Landforms', 'Water Bodies', 'Weather and Climate'],
-      Grade7: ['Earth and Its Features', 'Landforms and Water Bodies', 'Climate', 'India’s Physical Features'],
-      Grade8: ['Major Landforms of the World', 'Climatic Zones of the World', 'India’s Climate', 'Vegetation Zones', 'Water Resources'],
-      Grade9: ['Earth’s Movements', 'Landforms and Their Formation', 'Atmosphere and Weather', 'Climatic Regions of the World', 'Population', 'Human Settlements', 'Natural Resources'],
-      Grade10: ['Geomorphology', 'Climatic Conditions', 'Natural Vegetation', 'Water Resources', 'Population Dynamics', 'Agriculture', 'Transport and Communication', 'Industrial Regions', 'Urbanization'],
-    },
-    ICT: ['Basic Computer Literacy', 'MS Office', 'Internet Safety', 'Scratch Programming', 'Python Programming'],
-    SocialScience: ['History', 'Geography', 'Political Science', 'Economics'],
-  },
-  International: {
-    Math: ['Calculus', 'Algebra', 'Statistics'],
-    Science: ['Physics', 'Chemistry', 'Biology'],
-    English: ['Literature', 'Writing Skills'],
-    Hindi: ['Grammar', 'Comprehension', 'Literature'],
-    EVS: ['Geography', 'History', 'Biology'],
-    ICT: ['Advanced Computer Skills', 'HTML', 'Database Management', 'JavaScript', 'Python Programming'],
-    SocialScience: ['World History', 'Global Geography', 'Political Science', 'Economics'],
-  },
+  // ... (paste your full boardTopics object here)
 };
+
+const WorksheetGenerator = () => {
+  const [board, setBoard] = useState('');
+  const [subject, setSubject] = useState('');
+  const [grade, setGrade] = useState('');
+  const [topics, setTopics] = useState([]);
+
+  // Handle board change
+  const handleBoardChange = (e) => {
+    const selectedBoard = e.target.value;
+    setBoard(selectedBoard);
+    setSubject('');
+    setGrade('');
+    setTopics([]);
+  };
+
+  // Handle subject change
+  const handleSubjectChange = (e) => {
+    const selectedSubject = e.target.value;
+    setSubject(selectedSubject);
+    setGrade('');
+    setTopics([]);
+  };
+
+  // Handle grade change
+  const handleGradeChange = (e) => {
+    const selectedGrade = e.target.value;
+    setGrade(selectedGrade);
+
+    // Fetch topics for the selected board, subject, and grade
+    if (
+      board &&
+      subject &&
+      grade !== ''
+    ) {
+      // Check if subject contains grade level subtopics (like EVS, Geography)
+      const boardData = boardTopics[board];
+      if (!boardData) return setTopics([]);
+
+      const subjectData = boardData[subject];
+      if (!subjectData) return setTopics([]);
+
+      if (typeof subjectData === 'object' && subjectData !== null) {
+        // Subject has grade level topics (like EVS, Geography)
+        setTopics(subjectData[selectedGrade] || []);
+      } else {
+        // Subject has direct topic array (like Math, English)
+        setTopics(subjectData || []);
+      }
+    } else {
+      setTopics([]);
+    }
+  };
+
+  // Helper to get grades list from boardTopics object (only for subjects with grade keys)
+  const getGrades = () => {
+    if (board && subject) {
+      const subjectData = boardTopics[board]?.[subject];
+      if (typeof subjectData === 'object' && subjectData !== null) {
+        return Object.keys(subjectData);
+      }
+    }
+    return [];
+  };
+
+  return (
+    <div>
+      <h2>Worksheet Generator</h2>
+
+      {/* Board Dropdown */}
+      <label>
+        Select Board:
+        <select value={board} onChange={handleBoardChange}>
+          <option value="">--Select Board--</option>
+          {Object.keys(boardTopics).map((b) => (
+            <option key={b} value={b}>{b}</option>
+          ))}
+        </select>
+      </label>
+
+      {/* Subject Dropdown */}
+      <label>
+        Select Subject:
+        <select
+          value={subject}
+          onChange={handleSubjectChange}
+          disabled={!board}
+        >
+          <option value="">--Select Subject--</option>
+          {board &&
+            Object.keys(boardTopics[board]).map((subj) => (
+              <option key={subj} value={subj}>{subj}</option>
+            ))}
+        </select>
+      </label>
+
+      {/* Grade Dropdown */}
+      <label>
+        Select Grade:
+        <select
+          value={grade}
+          onChange={handleGradeChange}
+          disabled={!subject}
+        >
+          <option value="">--Select Grade--</option>
+          {getGrades().map((g) => (
+            <option key={g} value={g}>{g}</option>
+          ))}
+        </select>
+      </label>
+
+      {/* Topics List */}
+      <div>
+        <h3>Topics:</h3>
+        {topics.length > 0 ? (
+          <ul>
+            {topics.map((topic, idx) => (
+              <li key={idx}>{topic}</li>
+            ))}
+          </ul>
+        ) : (
+          <p>No topics available for selected options.</p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default WorksheetGenerator;
