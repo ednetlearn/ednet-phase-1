@@ -52,33 +52,42 @@ export default function WorksheetGenerator() {
   const [selectedGrade, setSelectedGrade] = useState('');
   const [topics, setTopics] = useState([]);
 
+  const [selectedTopic, setSelectedTopic] = useState('');
+  const [customTopic, setCustomTopic] = useState('');
+
   // Update topics when selection changes
   useEffect(() => {
     if (!selectedBoard || !selectedSubject || !selectedGrade) {
       setTopics([]);
+      setSelectedTopic('');
+      setCustomTopic('');
       return;
     }
     const board = boardTopics[selectedBoard];
     if (!board) {
       setTopics([]);
+      setSelectedTopic('');
+      setCustomTopic('');
       return;
     }
 
     const subjectData = board[selectedSubject];
     if (!subjectData) {
       setTopics([]);
+      setSelectedTopic('');
+      setCustomTopic('');
       return;
     }
 
     if (Array.isArray(subjectData)) {
-      // Subject with simple array of topics
       setTopics(subjectData);
     } else if (typeof subjectData === 'object') {
-      // Subject with grade-wise topics
       setTopics(subjectData[selectedGrade] || []);
     } else {
       setTopics([]);
     }
+    setSelectedTopic('');
+    setCustomTopic('');
   }, [selectedBoard, selectedSubject, selectedGrade]);
 
   const handleBoardChange = (e) => {
@@ -86,20 +95,39 @@ export default function WorksheetGenerator() {
     setSelectedSubject('');
     setSelectedGrade('');
     setTopics([]);
+    setSelectedTopic('');
+    setCustomTopic('');
   };
 
   const handleSubjectChange = (e) => {
     setSelectedSubject(e.target.value);
     setSelectedGrade('');
     setTopics([]);
+    setSelectedTopic('');
+    setCustomTopic('');
   };
 
   const handleGradeChange = (e) => {
     setSelectedGrade(e.target.value);
+    setSelectedTopic('');
+    setCustomTopic('');
+  };
+
+  const handleTopicChange = (e) => {
+    setSelectedTopic(e.target.value);
+    setCustomTopic('');
+  };
+
+  const handleCustomTopicChange = (e) => {
+    setCustomTopic(e.target.value);
+    setSelectedTopic('');
   };
 
   // Get subjects for selected board
   const subjects = selectedBoard ? Object.keys(boardTopics[selectedBoard]) : [];
+
+  // Determine which topic to use
+  const topicToUse = customTopic.trim() || selectedTopic;
 
   return (
     <div style={{ padding: 20 }}>
@@ -137,18 +165,40 @@ export default function WorksheetGenerator() {
         </label>
       </div>
 
-      <div style={{ marginTop: 20 }}>
-        <h3>Topics:</h3>
-        {topics.length > 0 ? (
-          <ul>
-            {topics.map((topic, idx) => (
-              <li key={idx}>{topic}</li>
-            ))}
-          </ul>
-        ) : (
-          <p>No topics available for selected options.</p>
-        )}
-      </div>
+      {topics.length > 0 && (
+        <>
+          <div style={{ marginTop: 20 }}>
+            <label>
+              Select Topic:
+              <select value={selectedTopic} onChange={handleTopicChange}>
+                <option value="">--Select Topic--</option>
+                {topics.map((topic, idx) => (
+                  <option key={idx} value={topic}>{topic}</option>
+                ))}
+              </select>
+            </label>
+
+            <label style={{ marginLeft: 20 }}>
+              Or enter your own topic:
+              <input
+                type="text"
+                value={customTopic}
+                placeholder="Type your topic here"
+                onChange={handleCustomTopicChange}
+                style={{ marginLeft: 10 }}
+              />
+            </label>
+          </div>
+
+          <div style={{ marginTop: 20 }}>
+            <strong>Using Topic:</strong> {topicToUse || <em>Please select or enter a topic above.</em>}
+          </div>
+        </>
+      )}
+
+      {!topics.length && selectedBoard && selectedSubject && selectedGrade && (
+        <p style={{ marginTop: 20 }}>No topics available for the selected board, subject, and grade.</p>
+      )}
     </div>
   );
 }
