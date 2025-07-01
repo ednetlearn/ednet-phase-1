@@ -3,13 +3,13 @@ import React, { useState, useCallback } from 'react';
 const gamesList = [
   { id: 1, name: 'Chess', enabled: true },
   { id: 2, name: 'Minecraft', enabled: true },
-  { id: 3, name: 'Scratch', enabled: false }, // Disabled by parental control example
+  { id: 3, name: 'Scratch', enabled: true }, // Enabled for now for testing
   { id: 4, name: 'Teachable Machine', enabled: true },
   { id: 5, name: 'Blockly', enabled: true },
   { id: 6, name: 'PictoBlox', enabled: true },
 ];
 
-const parentalControlEnabled = true; // Example: toggle this to simulate parental controls
+const parentalControlEnabled = true; // Toggle this to simulate parental controls
 
 export default function ScanAndGameZoneUI() {
   const [uploadedFile, setUploadedFile] = useState(null);

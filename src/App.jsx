@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './Home';
 import GamesPage from './GamesPage';
@@ -7,6 +7,8 @@ import ScanMyBook from './ScanMyBook';
 import ScanAndGameZoneUI from './ScanAndGameZoneUI';  // Import new component
 
 function App() {
+  const [count, setCount] = useState(0); // State to manage the count
+
   return (
     <Router>
       <nav>
@@ -24,6 +26,15 @@ function App() {
         <Route path="/scan" element={<ScanMyBook />} />
         <Route path="/scangamezone" element={<ScanAndGameZoneUI />} />  {/* New Route */}
       </Routes>
+
+      {/* Count feature */}
+      <div style={{ padding: '20px' }}>
+        <h2>Welcome to EdNet!</h2>
+        <p>Count is {count}</p> {/* Display count */}
+        <button onClick={() => setCount(count + 1)}>Increment</button> {/* Button to increment */}
+      </div>
+
+      <ScanAndGameZoneUI /> {/* Display the ScanAndGameZoneUI component */}
     </Router>
   );
 }
