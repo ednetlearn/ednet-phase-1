@@ -1,32 +1,28 @@
-// App.jsx
-import React, { useState } from 'react';
-import ScanMyBook from './ScanMyBook';
-import DynamicWorksheetGenerator from './DynamicWorksheetGenerator';
+// src/App.jsx
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import CombinedWorksheetGenerator from './CombinedWorksheetGenerator';
+import GamesPage from './GamesPage';
+import ChessGame from './games/ChessGame';
+import CodingPuzzle from './games/CodingPuzzle';
+import MathQuiz from './games/MathQuiz';
 
 function App() {
-  // Holds text extracted from scanned book or syllabus
-  const [scannedText, setScannedText] = useState('');
-
-  // Optional: function to clear scanned text from DynamicWorksheetGenerator UI
-  const clearScannedText = () => {
-    setScannedText('');
-  };
-
   return (
-    <div style={{ maxWidth: 900, margin: 'auto', padding: 20 }}>
-      <h1>EdNet Worksheet Generator</h1>
+    <Router>
+      <nav style={{ padding: 10, background: '#eee', marginBottom: 20 }}>
+        <Link to="/" style={{ marginRight: 15 }}>Worksheet Generator</Link>
+        <Link to="/games">Games</Link>
+      </nav>
 
-      {/* Scan My Book section */}
-      <ScanMyBook onTextExtracted={setScannedText} />
-
-      <hr style={{ margin: '40px 0' }} />
-
-      {/* Worksheet Generator section */}
-      <DynamicWorksheetGenerator
-        scannedText={scannedText}
-        onClearScannedText={clearScannedText}
-      />
-    </div>
+      <Routes>
+        <Route path="/" element={<CombinedWorksheetGenerator />} />
+        <Route path="/games" element={<GamesPage />} />
+        <Route path="/games/chess" element={<ChessGame />} />
+        <Route path="/games/coding-puzzle" element={<CodingPuzzle />} />
+        <Route path="/games/math-quiz" element={<MathQuiz />} />
+      </Routes>
+    </Router>
   );
 }
 
