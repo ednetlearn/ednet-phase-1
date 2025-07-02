@@ -41,12 +41,12 @@ function CombinedWorksheetGenerator() {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Simulate extracted text from file - replace with OCR if needed
+    // Simulated text extraction - replace with actual OCR if integrated
     const simulatedExtractedText =
       "This is the extracted syllabus text from the uploaded file.";
     setUploadedText(simulatedExtractedText);
 
-    // Clear other inputs when uploading a file
+    // Clear other inputs when a file is uploaded
     setCustomTopic("");
     setSelectedTopic("");
   };
@@ -166,8 +166,8 @@ function CombinedWorksheetGenerator() {
           value={selectedTopic}
           onChange={(e) => {
             setSelectedTopic(e.target.value);
-            setCustomTopic(""); // clear custom topic when selecting topic
-            setUploadedText(""); // clear uploaded text too
+            setCustomTopic("");
+            setUploadedText("");
           }}
           disabled={uploadedText.trim() !== ""}
           style={{ marginBottom: 12 }}
@@ -190,8 +190,8 @@ function CombinedWorksheetGenerator() {
           value={customTopic}
           onChange={(e) => {
             setCustomTopic(e.target.value);
-            setSelectedTopic(""); // clear selected topic when typing custom
-            setUploadedText(""); // clear uploaded text too
+            setSelectedTopic("");
+            setUploadedText("");
           }}
           placeholder="e.g. Photosynthesis"
           style={{ width: "100%", marginBottom: 12, padding: 4 }}
