@@ -1,18 +1,18 @@
-// ScanMyBook.jsx
 import React, { useState } from 'react';
-// Uncomment and install tesseract.js for OCR functionality
-// import { createWorker } from 'tesseract.js';
+import { useNavigate } from 'react-router-dom';
+// import { createWorker } from 'tesseract.js'; // Uncomment if using OCR
 
-function ScanMyBook({ onTextExtracted }) {
+function ScanMyBook() {
   const [file, setFile] = useState(null);
   const [ocrText, setOcrText] = useState('');
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState(null);
 
-  // Uncomment and configure Tesseract worker if integrating OCR
+  const navigate = useNavigate();
+
   /*
   const worker = createWorker({
-    logger: m => console.log(m), // optional logger
+    logger: m => console.log(m),
   });
   */
 
@@ -24,71 +24,64 @@ function ScanMyBook({ onTextExtracted }) {
 
     if (!selectedFile) return;
 
-    // For now, simulate extracted text (replace this with actual OCR)
-    // onTextExtracted("This is sample extracted text from the scanned book.");
+    // For demo: simulate text extraction after file select
+    // Replace with actual OCR logic if desired
+    setTimeout(() => {
+      const simulatedText = 'This is a simulated extracted text from the uploaded syllabus or textbook.';
+      setOcrText(simulatedText);
+    }, 1000);
 
-    // --- Uncomment below to enable OCR with Tesseract.js ---
+    // Uncomment below for real OCR with Tesseract.js
     /*
     setProcessing(true);
     try {
       await worker.load();
       await worker.loadLanguage('eng');
       await worker.initialize('eng');
-
-      const {
-        data: { text },
-      } = await worker.recognize(selectedFile);
-
+      const { data: { text } } = await worker.recognize(selectedFile);
       setOcrText(text);
-      onTextExtracted(text);
-
-      await worker.terminate();
     } catch (err) {
       console.error(err);
       setError('Failed to extract text from image.');
     } finally {
       setProcessing(false);
+      await worker.terminate();
     }
     */
   };
 
-  // For demo without OCR, simulate extraction after file select
-  const simulateExtraction = () => {
-    const simulatedText =
-      'This is a simulated extracted text from the uploaded syllabus or textbook.';
-    setOcrText(simulatedText);
-    onTextExtracted(simulatedText);
+  const handleUseExtractedText = () => {
+    if (ocrText.trim()) {
+      navigate('/worksheets', { state: { extractedText: ocrText } });
+    } else {
+      alert('No extracted text available.');
+    }
   };
 
   return (
     <div>
       <h2>Scan My Book</h2>
-      <input
-        type="file"
-        accept=".pdf,image/*"
-        onChange={handleFileChange}
-      />
-      {/* Demo button to simulate OCR extraction */}
-      {file && !processing && !ocrText && (
-        <button onClick={simulateExtraction} style={{ marginTop: 10 }}>
-          Simulate Text Extraction
-        </button>
-      )}
-
+      <input type="file" accept=".pdf,image/*" onChange={handleFileChange} />
       {processing && <p>Processing OCR, please wait...</p>}
-
       {error && <p style={{ color: 'red' }}>{error}</p>}
-
       {ocrText && (
-        <div style={{ marginTop: 20 }}>
-          <h4>Extracted Text Preview:</h4>
-          <textarea
-            rows={8}
-            style={{ width: '100%', whiteSpace: 'pre-wrap' }}
-            value={ocrText}
-            readOnly
-          />
-        </div>
+        <>
+          <div style={{ marginTop: 20 }}>
+            <h4>Extracted Text Preview:</h4>
+            <textarea
+              rows={8}
+              style={{ width: '100%', whiteSpace: 'pre-wrap' }}
+              value={ocrText}
+              readOnly
+            />
+          </div>
+          <button
+            onClick={handleUseExtractedText}
+            style={{ marginTop: 15 }}
+          >
+            Use Extracted Text in Worksheet Generator
+          </button>
+        </>
       )}
     </div>
   );
