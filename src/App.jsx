@@ -1,11 +1,12 @@
 // src/App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import CombinedWorksheetGenerator from './CombinedWorksheetGenerator';
-import GamesPage from './GamesPage';
-import ChessGame from './games/ChessGame';
-import CodingPuzzle from './games/CodingPuzzle';
-import MathQuiz from './games/MathQuiz';
+
+import CombinedWorksheetGenerator from './CombinedWorksheetGenerator.jsx';
+import GamesPage from './GamesPage.jsx';
+import ChessGame from './games/ChessGame.jsx';
+import CodingPuzzle from './games/CodingPuzzle.jsx';
+import MathQuiz from './games/MathQuiz.jsx';
 
 function App() {
   return (
