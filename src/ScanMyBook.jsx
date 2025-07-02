@@ -1,126 +1,97 @@
-import React, { useState } from "react";
+// ScanMyBook.jsx
+import React, { useState } from 'react';
+// Uncomment and install tesseract.js for OCR functionality
+// import { createWorker } from 'tesseract.js';
 
-const LANGUAGES = [
-  { code: "en", name: "English" },
-  { code: "hi", name: "Hindi" },
-  { code: "te", name: "Telugu" },
-  { code: "ta", name: "Tamil" },
-  { code: "kn", name: "Kannada" },
-  { code: "mr", name: "Marathi" },
-  { code: "bn", name: "Bengali" },
-  { code: "gu", name: "Gujarati" },
-  { code: "pa", name: "Punjabi" },
-  // add more if needed
-];
+function ScanMyBook({ onTextExtracted }) {
+  const [file, setFile] = useState(null);
+  const [ocrText, setOcrText] = useState('');
+  const [processing, setProcessing] = useState(false);
+  const [error, setError] = useState(null);
 
-export default function ScanMyBookTranslation() {
-  const [extractedText, setExtractedText] = useState("");
-  const [targetLang, setTargetLang] = useState("en");
-  const [translatedText, setTranslatedText] = useState("");
-  const [isTranslating, setIsTranslating] = useState(false);
-  const [step, setStep] = useState(1);
+  // Uncomment and configure Tesseract worker if integrating OCR
+  /*
+  const worker = createWorker({
+    logger: m => console.log(m), // optional logger
+  });
+  */
 
-  // Replace this with your actual OCR text extraction logic or pass as prop
-  const handleExtractText = () => {
-    // demo text for now
-    const demoText = `This is sample extracted text from OCR.\nYou can replace this with your OCR output.`;
-    setExtractedText(demoText);
+  const handleFileChange = async (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+    setOcrText('');
+    setError(null);
+
+    if (!selectedFile) return;
+
+    // For now, simulate extracted text (replace this with actual OCR)
+    // onTextExtracted("This is sample extracted text from the scanned book.");
+
+    // --- Uncomment below to enable OCR with Tesseract.js ---
+    /*
+    setProcessing(true);
+    try {
+      await worker.load();
+      await worker.loadLanguage('eng');
+      await worker.initialize('eng');
+
+      const {
+        data: { text },
+      } = await worker.recognize(selectedFile);
+
+      setOcrText(text);
+      onTextExtracted(text);
+
+      await worker.terminate();
+    } catch (err) {
+      console.error(err);
+      setError('Failed to extract text from image.');
+    } finally {
+      setProcessing(false);
+    }
+    */
   };
 
-  const handleTranslate = async () => {
-    if (!extractedText.trim()) return alert("No text to translate.");
-
-    setIsTranslating(true);
-    setTranslatedText("");
-
-    try {
-      const response = await fetch("https://libretranslate.com/translate", {
-        method: "POST",
-        body: JSON.stringify({
-          q: extractedText,
-          source: "en", // Assuming OCR extracts English; adjust if needed
-          target: targetLang,
-          format: "text",
-        }),
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (!response.ok) throw new Error("Translation failed");
-
-      const data = await response.json();
-      setTranslatedText(data.translatedText);
-      setStep(3); // Move to translated preview step
-    } catch (error) {
-      alert("Error during translation: " + error.message);
-    } finally {
-      setIsTranslating(false);
-    }
+  // For demo without OCR, simulate extraction after file select
+  const simulateExtraction = () => {
+    const simulatedText =
+      'This is a simulated extracted text from the uploaded syllabus or textbook.';
+    setOcrText(simulatedText);
+    onTextExtracted(simulatedText);
   };
 
   return (
-    <div style={{ maxWidth: 700, margin: "auto", padding: 20, fontFamily: "sans-serif" }}>
-      <h2>Scan My Book - OCR & Translation Workflow</h2>
-
-      {/* Step 1: Extract OCR Text */}
-      {step === 1 && (
-        <div>
-          <p>
-            Press below to simulate text extraction from scanned page. Replace this logic with your OCR engine.
-          </p>
-          <button onClick={handleExtractText}>Extract Text from Page (Demo)</button>
-        </div>
+    <div>
+      <h2>Scan My Book</h2>
+      <input
+        type="file"
+        accept=".pdf,image/*"
+        onChange={handleFileChange}
+      />
+      {/* Demo button to simulate OCR extraction */}
+      {file && !processing && !ocrText && (
+        <button onClick={simulateExtraction} style={{ marginTop: 10 }}>
+          Simulate Text Extraction
+        </button>
       )}
 
-      {/* Step 2: Show extracted text and select language */}
-      {step >= 2 && (
+      {processing && <p>Processing OCR, please wait...</p>}
+
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      {ocrText && (
         <div style={{ marginTop: 20 }}>
-          <h3>Extracted Text Preview</h3>
+          <h4>Extracted Text Preview:</h4>
           <textarea
             rows={8}
-            style={{ width: "100%" }}
-            value={extractedText}
-            onChange={(e) => setExtractedText(e.target.value)}
+            style={{ width: '100%', whiteSpace: 'pre-wrap' }}
+            value={ocrText}
+            readOnly
           />
-          <div style={{ marginTop: 10 }}>
-            <label>
-              Select Language for Translation:{" "}
-              <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)}>
-                {LANGUAGES.map((lang) => (
-                  <option key={lang.code} value={lang.code}>
-                    {lang.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-          <div style={{ marginTop: 10 }}>
-            <button onClick={handleTranslate} disabled={isTranslating}>
-              {isTranslating ? "Translating..." : "Translate"}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Step 3: Show translated text */}
-      {step === 3 && (
-        <div style={{ marginTop: 30 }}>
-          <h3>Translated Text Preview ({LANGUAGES.find((l) => l.code === targetLang)?.name})</h3>
-          <textarea
-            rows={8}
-            style={{ width: "100%" }}
-            value={translatedText}
-            onChange={(e) => setTranslatedText(e.target.value)}
-          />
-          <div style={{ marginTop: 10 }}>
-            <button onClick={() => alert("Proceed to content generation with translated text.")}>
-              Proceed with Quiz / Summary Generation
-            </button>
-            <button style={{ marginLeft: 10 }} onClick={() => setStep(2)}>
-              Back to Edit Extracted Text
-            </button>
-          </div>
         </div>
       )}
     </div>
   );
 }
+
+export default ScanMyBook;
