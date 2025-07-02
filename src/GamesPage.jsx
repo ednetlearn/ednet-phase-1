@@ -1,98 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-// Sample syllabus data (simplified)
-const syllabusData = {
-  CBSE: {
-    Grade6: {
-      Science: ["Photosynthesis", "Food Chains", "Plant Cells"],
-      Math: ["Fractions", "Decimals"],
-    },
-    Grade7: {
-      Science: ["Respiration", "Electricity"],
-      Math: ["Algebra", "Geometry"],
-    },
-  },
-  ICSE: {
-    Grade6: {
-      Science: ["Nutrition", "Light"],
-      Math: ["Numbers", "Geometry Basics"],
-    },
-  },
-};
-
-function CombinedWorksheetGenerator() {
-  const [board, setBoard] = useState("CBSE");
-  const [grade, setGrade] = useState("Grade6");
-  const [subject, setSubject] = useState("Science");
-  const [topics, setTopics] = useState([]);
-  const [selectedTopic, setSelectedTopic] = useState("");
-  const [customTopic, setCustomTopic] = useState("");
-  const [uploadedText, setUploadedText] = useState("");
-  const [questions, setQuestions] = useState([]);
+export default function GamesPage() {
+  const [activityType, setActivityType] = useState('wordPuzzle'); // default selection
+  const [topic, setTopic] = useState('');
+  const [generatedActivities, setGeneratedActivities] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Update topics when board/grade/subject changes
-  useEffect(() => {
-    const newTopics =
-      syllabusData[board]?.[grade]?.[subject] || [];
-    setTopics(newTopics);
-    setSelectedTopic(newTopics[0] || "");
-  }, [board, grade, subject]);
-
-  // Simulate text extraction from file upload
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    // Simulate extraction, in real app use OCR or text extraction libs
-    const simulatedExtractedText =
-      "This is the extracted syllabus text from the uploaded file.";
-    setUploadedText(simulatedExtractedText);
-
-    // Clear custom and selected topics since we now have uploaded text
-    setCustomTopic("");
-    setSelectedTopic("");
-  };
-
-  const generatePrompt = () => {
-    if (uploadedText.trim()) {
-      return `Generate worksheet questions based on the following syllabus content:\n${uploadedText}`;
-    }
-    if (customTopic.trim()) {
-      return `Generate worksheet questions for the topic: "${customTopic.trim()}"`;
-    }
-    if (selectedTopic) {
-      return `Generate worksheet questions for the topic: "${selectedTopic}"`;
-    }
-    return "";
-  };
-
   const handleGenerate = async () => {
-    const prompt = generatePrompt();
-    if (!prompt) {
-      alert(
-        "Please upload a syllabus file, enter a custom topic, or select a topic from the list."
-      );
+    if (!topic.trim()) {
+      alert("Please enter a topic for activity generation.");
       return;
     }
-
     setLoading(true);
-    setQuestions([]);
+    setGeneratedActivities([]);
+
+    // Create prompt for AI/backend
+    const prompt = `Generate ${activityType} activities for the topic: ${topic}`;
 
     try {
-      const response = await fetch(
-        "http://localhost:5001/generate-worksheet",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt }),
-        }
-      );
+      // Replace URL below with your backend endpoint
+      const response = await fetch('http://localhost:5001/generate-activities', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt }),
+      });
       const data = await response.json();
-      setQuestions(data.questions || []);
+      setGeneratedActivities(data.activities || []);
     } catch (error) {
-      console.error(error);
-      alert("Failed to generate worksheet. Try again.");
+      console.error('Error generating activities:', error);
+      alert('Failed to generate activities. Please try again.');
     }
 
     setLoading(false);
@@ -100,134 +37,71 @@ function CombinedWorksheetGenerator() {
 
   return (
     <div style={{ maxWidth: 600, margin: "auto", padding: 20 }}>
-      <h2>EdNet Combined Worksheet Generator</h2>
+      <h2>EdNet Games & Activities</h2>
 
-      <h3>Scan My Book / Upload Syllabus</h3>
-      <input type="file" accept=".pdf,image/*" onChange={handleFileChange} />
-      {uploadedText && (
-        <textarea
-          style={{ width: "100%", height: 80, marginTop: 8 }}
-          readOnly
-          value={uploadedText}
-        />
-      )}
+      <div style={{ marginBottom: 20 }}>
+        <div style={{ padding: 15, border: "1px solid #ccc", borderRadius: 5, marginBottom: 15 }}>
+          <h3>Chess</h3>
+          <p>Classic strategy game</p>
+          <Link to="/games/chess">Play Now</Link>
+        </div>
 
-      <hr style={{ margin: "20px 0" }} />
+        <div style={{ padding: 15, border: "1px solid #ccc", borderRadius: 5, marginBottom: 15 }}>
+          <h3>Coding Puzzle</h3>
+          <p>Solve code challenges</p>
+          <Link to="/games/codepuzzle">Play Now</Link>
+        </div>
 
-      <h3>Or select from syllabus</h3>
+        <div style={{ padding: 15, border: "1px solid #ccc", borderRadius: 5 }}>
+          <h3>Math Quiz</h3>
+          <p>Practice math skills</p>
+          <Link to="/games/mathquiz">Play Now</Link>
+        </div>
+      </div>
 
-      <label>
-        Board:{" "}
-        <select
-          value={board}
-          onChange={(e) => setBoard(e.target.value)}
-          style={{ marginBottom: 8 }}
-        >
-          {Object.keys(syllabusData).map((b) => (
-            <option key={b} value={b}>
-              {b}
-            </option>
-          ))}
-        </select>
-      </label>
+      <hr style={{ margin: "40px 0" }} />
 
-      <br />
+      <div>
+        <h3>AI Activity Generator</h3>
+        <label>
+          Select Activity Type:{" "}
+          <select
+            value={activityType}
+            onChange={(e) => setActivityType(e.target.value)}
+            style={{ marginRight: 10 }}
+          >
+            <option value="wordPuzzle">Word Puzzle</option>
+            <option value="maze">Maze</option>
+            <option value="chessPuzzle">Chess Puzzle</option>
+            <option value="codePuzzle">Code Puzzle</option>
+          </select>
+        </label>
 
-      <label>
-        Grade:{" "}
-        <select
-          value={grade}
-          onChange={(e) => setGrade(e.target.value)}
-          style={{ marginBottom: 8 }}
-        >
-          {Object.keys(syllabusData[board] || {}).map((g) => (
-            <option key={g} value={g}>
-              {g}
-            </option>
-          ))}
-        </select>
-      </label>
-
-      <br />
-
-      <label>
-        Subject:{" "}
-        <select
-          value={subject}
-          onChange={(e) => setSubject(e.target.value)}
-          style={{ marginBottom: 8 }}
-        >
-          {Object.keys(syllabusData[board]?.[grade] || {}).map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </select>
-      </label>
-
-      <br />
-
-      <label>
-        Topic:{" "}
-        <select
-          value={selectedTopic}
-          onChange={(e) => {
-            setSelectedTopic(e.target.value);
-            setCustomTopic(""); // clear custom topic when selecting topic
-            setUploadedText(""); // clear uploaded text too
-          }}
-          disabled={uploadedText.trim() !== ""}
-          style={{ marginBottom: 12 }}
-        >
-          <option value="">-- Select a topic --</option>
-          {topics.map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
-          ))}
-        </select>
-      </label>
-
-      <br />
-
-      <label>
-        Or enter custom topic:{" "}
         <input
           type="text"
-          value={customTopic}
-          onChange={(e) => {
-            setCustomTopic(e.target.value);
-            setSelectedTopic(""); // clear selected topic when typing custom
-            setUploadedText(""); // clear uploaded text too
-          }}
-          placeholder="e.g. Photosynthesis"
-          style={{ width: "100%", marginBottom: 12, padding: 4 }}
+          value={topic}
+          onChange={(e) => setTopic(e.target.value)}
+          placeholder="Enter topic for activities"
+          style={{ width: "60%", marginRight: 10, padding: 5 }}
         />
-      </label>
 
-      <br />
-
-      <button onClick={handleGenerate} disabled={loading}>
-        {loading ? "Generating..." : "Generate Worksheet"}
-      </button>
+        <button onClick={handleGenerate} disabled={loading}>
+          {loading ? "Generating..." : "Generate Activities"}
+        </button>
+      </div>
 
       <div style={{ marginTop: 20 }}>
-        <h3>Generated Questions:</h3>
-        {questions.length === 0 ? (
-          <p>No questions generated yet.</p>
+        <h3>Generated Activities</h3>
+        {generatedActivities.length === 0 ? (
+          <p>No activities generated yet.</p>
         ) : (
-          <ol>
-            {questions.map((q, i) => (
-              <li key={i} style={{ marginBottom: 10 }}>
-                {q}
-              </li>
+          <ul>
+            {generatedActivities.map((activity, idx) => (
+              <li key={idx}>{activity}</li>
             ))}
-          </ol>
+          </ul>
         )}
       </div>
     </div>
   );
 }
-
-export default CombinedWorksheetGenerator;
-
