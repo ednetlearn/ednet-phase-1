@@ -1,7 +1,7 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import { Configuration, OpenAIApi } from 'openai';
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import { Configuration, OpenAIApi } from "openai";
 
 dotenv.config();
 
@@ -16,24 +16,27 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-app.post('/generate-worksheet', async (req, res) => {
+app.post("/generate-worksheet", async (req, res) => {
   try {
     const { prompt } = req.body;
-    if (!prompt) return res.status(400).json({ error: 'Prompt is required' });
+
+    if (!prompt) {
+      return res.status(400).json({ error: "Prompt is required." });
+    }
 
     const completion = await openai.createChatCompletion({
-      model: 'gpt-4o-mini',
-      messages: [{ role: 'user', content: prompt }],
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: prompt }],
       max_tokens: 500,
     });
 
     const text = completion.data.choices[0].message.content;
-    const questions = text.split('\n').filter(line => line.trim() !== '');
+    const questions = text.split("\n").filter((line) => line.trim() !== "");
 
     res.json({ questions });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Failed to generate worksheet.' });
+    res.status(500).json({ error: "Failed to generate worksheet." });
   }
 });
 
