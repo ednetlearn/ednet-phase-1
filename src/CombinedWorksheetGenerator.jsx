@@ -33,8 +33,7 @@ function CombinedWorksheetGenerator() {
 
   // Update topics when board/grade/subject changes
   useEffect(() => {
-    const newTopics =
-      syllabusData[board]?.[grade]?.[subject] || [];
+    const newTopics = syllabusData[board]?.[grade]?.[subject] || [];
     setTopics(newTopics);
     setSelectedTopic(newTopics[0] || "");
   }, [board, grade, subject]);
@@ -44,7 +43,7 @@ function CombinedWorksheetGenerator() {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Simulate extraction, in real app use OCR or text extraction libs
+    // Simulate extraction, replace with actual OCR if implemented
     const simulatedExtractedText =
       "This is the extracted syllabus text from the uploaded file.";
     setUploadedText(simulatedExtractedText);
@@ -80,14 +79,11 @@ function CombinedWorksheetGenerator() {
     setQuestions([]);
 
     try {
-      const response = await fetch(
-        "http://localhost:5001/generate-worksheet",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt }),
-        }
-      );
+      const response = await fetch("http://localhost:5001/generate-worksheet", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt }),
+      });
       const data = await response.json();
       setQuestions(data.questions || []);
     } catch (error) {
@@ -230,4 +226,3 @@ function CombinedWorksheetGenerator() {
 }
 
 export default CombinedWorksheetGenerator;
-
