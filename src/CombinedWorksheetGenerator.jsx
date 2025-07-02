@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-// Sample syllabus data (simplified)
+// Sample syllabus data
 const syllabusData = {
   CBSE: {
     Grade6: {
@@ -31,24 +31,22 @@ function CombinedWorksheetGenerator() {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Update topics when board/grade/subject changes
   useEffect(() => {
     const newTopics = syllabusData[board]?.[grade]?.[subject] || [];
     setTopics(newTopics);
     setSelectedTopic(newTopics[0] || "");
   }, [board, grade, subject]);
 
-  // Simulate text extraction from file upload
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Simulate extraction, replace with actual OCR if implemented
+    // Simulate extracted text from file - replace with OCR if needed
     const simulatedExtractedText =
       "This is the extracted syllabus text from the uploaded file.";
     setUploadedText(simulatedExtractedText);
 
-    // Clear custom and selected topics since we now have uploaded text
+    // Clear other inputs when uploading a file
     setCustomTopic("");
     setSelectedTopic("");
   };
@@ -74,7 +72,6 @@ function CombinedWorksheetGenerator() {
       );
       return;
     }
-
     setLoading(true);
     setQuestions([]);
 
@@ -88,7 +85,7 @@ function CombinedWorksheetGenerator() {
       setQuestions(data.questions || []);
     } catch (error) {
       console.error(error);
-      alert("Failed to generate worksheet. Try again.");
+      alert("Failed to generate worksheet. Please try again.");
     }
 
     setLoading(false);
