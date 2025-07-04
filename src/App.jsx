@@ -1,28 +1,18 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Home from './Pages/Home';
-import GamesPage from './Pages/GamesPage';
-import WorksheetGenerator from './Pages/WorksheetGenerator';
-import ScanAndGameZoneUI from './Pages/ScanAndGameZoneUI';
-import LoginAccount from './Pages/LoginAccount';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import ParentPage from './pages/ParentPage';
+import Register from './pages/Register';
+import SamplesPreview from './pages/SamplesPreview';
 
 function App() {
   return (
     <Router>
-      <nav>
-        <Link to="/">Home</Link> |{' '}
-        <Link to="/games">Games</Link> |{' '}
-        <Link to="/worksheets">Worksheet Generator</Link> |{' '}
-        <Link to="/scan">Scan & Game Zone</Link> |{' '}
-        <Link to="/login">Login</Link>
-      </nav>
-
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/games" element={<GamesPage />} />
-        <Route path="/worksheets" element={<WorksheetGenerator />} />
-        <Route path="/scan" element={<ScanAndGameZoneUI />} />
-        <Route path="/login" element={<LoginAccount />} />
+        <Route path="/parent" element={<ParentPage />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/samples" element={<SamplesPreview />} />
       </Routes>
     </Router>
   );
