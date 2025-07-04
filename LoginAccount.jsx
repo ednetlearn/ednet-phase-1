@@ -1,1 +1,0 @@
-// Placeholder for src/components/LoginAccount.jsx
